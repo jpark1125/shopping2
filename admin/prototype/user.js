@@ -35,7 +35,7 @@ U.prototype.DuplicateData = async (target, data) => {
 U.prototype.SignUp = async (data) => {
   try {
     await db.adminuser.create(data);
-    await redisClient.client.set(data.id, data.refresh_token);
+    await client.client.set(data.id, data.refresh_token);
   } catch (err) {
     throw err;
   }
