@@ -26,17 +26,12 @@ module.exports = {
     try {
       console.log(req.body);
       req.body.id = shortid.generate();
-      const userType = req.body.userType;
       req.body.access_token = util.jwt.createToken({
         id: req.body.id,
         user_id: req.body.userid,
-        user_type: userType,
       });
-      req.body.refresh_token = util.jwt.createToken({
-        id: req.body.id,
-        user_type: userType,
-      });
-      await user.SignUp(user.UserBind(req.body, userType));
+      req.body.refresh_token = util.jwt.createToken(req.body.id);
+      await user.SignUp(user.UserBind(req.body));
       return res.status(200).send({
         access_token: req.body.access_token,
         refresh_token: req.body.refresh_token,

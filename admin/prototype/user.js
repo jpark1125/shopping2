@@ -5,7 +5,7 @@ const db = require("../models");
 const client = require("../../middleware/index");
 class U {}
 
-U.prototype.UserBind = (data, userType) => {
+U.prototype.UserBind = (data) => {
   return {
     id: data.id,
     userid: data.userid,
@@ -14,7 +14,6 @@ U.prototype.UserBind = (data, userType) => {
     nickname: data.nickname,
     profile: data.profile,
     refresh_token: data.refresh_token,
-    user_type: userType,
   };
 };
 
@@ -23,7 +22,7 @@ U.prototype.DuplicateData = async (target, data) => {
     const whereClause = {};
     whereClause[target] = data;
 
-    const cnt = await db.tbl_user.count({
+    const cnt = await db.adminuser.count({
       where: whereClause,
     });
 
@@ -35,8 +34,8 @@ U.prototype.DuplicateData = async (target, data) => {
 
 U.prototype.SignUp = async (data) => {
   try {
-    await db.tbl_user.create(data);
-    await redisClient.client.set(data.id, data.refreshToken);
+    await db.adminuser.create(data);
+    await redisClient.client.set(data.id, data.refresh_token);
   } catch (err) {
     throw err;
   }
@@ -44,7 +43,7 @@ U.prototype.SignUp = async (data) => {
 U.prototype.LogIn = async (u) => {
   console.log(u.userid);
   try {
-    const user = await db.tbl_user.findOne({
+    const user = await db.adminuser.findOne({
       where: {
         userid: u.userid,
       },
@@ -55,7 +54,7 @@ U.prototype.LogIn = async (u) => {
         user_id: u.userid,
       });
       let refresh_token = util.jwt.createRefreshToken(user.id);
-      await db.tbl_user.update(
+      await db.adminuser.update(
         {
           refresh_token: refresh_token,
         },
@@ -77,7 +76,7 @@ U.prototype.LogIn = async (u) => {
 };
 U.prototype.MyPage = async (id) => {
   try {
-    const row = await db.tbl_user.findOne({
+    const row = await db.adminuser.findOne({
       where: {
         id: id,
       },
@@ -91,7 +90,7 @@ U.prototype.MyPage = async (id) => {
 U.prototype.UpdateMyPage = async (data) => {
   try {
     console.log(data);
-    await db.tbl_user.update(
+    await db.adminuser.update(
       {
         nickname: data.nickname,
       },

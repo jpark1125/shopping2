@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const adminuser = sequelize.define(
-    "AdminUser",
+    "adminuser",
     {
       id: {
         type: DataTypes.STRING,
@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       freezeTableName: true,
-      timestamps: true,
+      timestamps: false,
     }
   );
 

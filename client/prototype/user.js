@@ -5,7 +5,7 @@ const db = require("../models");
 const client = require("../../middleware/index");
 class U {}
 
-U.prototype.UserBind = (data, userType) => {
+U.prototype.UserBind = (data) => {
   return {
     id: data.id,
     userid: data.userid,
@@ -14,7 +14,6 @@ U.prototype.UserBind = (data, userType) => {
     nickname: data.nickname,
     profile: data.profile,
     refresh_token: data.refresh_token,
-    user_type: userType,
   };
 };
 

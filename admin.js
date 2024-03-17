@@ -10,17 +10,17 @@ require("dotenv").config();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-// app.use("/api/v1", Router.userRouter);
-// app.use("/api/v1", Router.BoardRoute);
+app.use("/api/v1", Router.userRouter);
+app.use("/api/v1", Router.BoardRoute);
 
-// sequelize
-//   .sync({ force: false })
-//   .then(() => {
-//     console.log("데이터베이스 연결");
-//   })
-//   .catch((err) => {
-//     console.log(err);
-//   });
+sequelize
+  .sync({ force: false })
+  .then(() => {
+    console.log("데이터베이스 연결");
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
 const check_mysql_health = async () => {
   setInterval(async () => {

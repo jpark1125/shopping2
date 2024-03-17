@@ -15,7 +15,6 @@ module.exports = {
       {
         id: payload.id,
         user_id: payload.user_id,
-        user_type: payload.user_type,
       },
       ACCESS_TOKEN_KEY,
       {
