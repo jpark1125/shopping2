@@ -6,6 +6,7 @@ const { board_controller } = require("../controller");
 
 const router = express.Router();
 
+router.get("/getpost", board_controller.GetPost);
 router.get("/get", board_controller.Get);
 router.post("/search", board_controller.Search);
 //("/cart",isBuyer, board_controller.Cart); 장바구니담기

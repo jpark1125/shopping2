@@ -3,17 +3,6 @@ const { Op } = require("sequelize");
 
 class B {}
 
-B.prototype.createPost = async function ({ title, content, image, userId }) {
-  return await Board.create({ title, content, image, userId });
-};
-
-B.prototype.deletePost = async function (postId) {
-  return await Board.destroy({ where: { id: postId } });
-};
-
-// B.prototype.getAllPosts = async function () {
-//   return await Board.findAll();
-// };
 B.prototype.getAllPosts = async function () {
   const posts = await Board.findAll({
     attributes: ["id", "title", "images"],
@@ -49,10 +38,6 @@ B.prototype.searchPosts = async function ({ title, content }) {
       ],
     },
   });
-};
-
-B.prototype.updatePost = async function (postId, { title, content }) {
-  return await Board.update({ title, content }, { where: { id: postId } });
 };
 
 module.exports = B;

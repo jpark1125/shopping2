@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
-  const AdminBoard = sequelize.define(
-    "AdminBoard",
+  const Board = sequelize.define(
+    "Board",
     {
       id: {
         type: DataTypes.STRING,
@@ -18,15 +18,12 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      price: {
-        type: DataTypes.INTEGER,
-      },
     },
     {
-      tableName: "adminboard",
+      tableName: "board",
       timestamps: true,
     }
   );
 
-  return AdminBoard;
+  return Board;
 };
