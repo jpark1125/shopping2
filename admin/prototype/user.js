@@ -1,7 +1,8 @@
-const util = require("../utils");
+const util = require("../../utils");
 const shortid = require("shortid");
 const db = require("../models");
-const client = require("../middleware/index");
+
+const client = require("../../middleware/index");
 class U {}
 
 U.prototype.UserBind = (data, userType) => {

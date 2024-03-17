@@ -1,5 +1,5 @@
 const shortid = require("shortid");
-const util = require("../utils");
+const util = require("../../utils");
 const { U, A } = require("../prototype");
 const user = new U();
 const auth = new A();
@@ -26,23 +26,19 @@ module.exports = {
     try {
       console.log(req.body);
       req.body.id = shortid.generate();
-      const userType = req.body.userType;
+      // const userType = req.body.userType;
       req.body.access_token = util.jwt.createToken({
         id: req.body.id,
         user_id: req.body.userid,
-        user_type: userType,
       });
       req.body.refresh_token = util.jwt.createToken({
         id: req.body.id,
-        user_type: userType,
       });
       await user.SignUp(user.UserBind(req.body, userType));
-      return res
-        .status(200)
-        .send({
-          access_token: req.body.access_token,
-          refresh_token: req.body.refresh_token,
-        });
+      return res.status(200).send({
+        access_token: req.body.access_token,
+        refresh_token: req.body.refresh_token,
+      });
     } catch (error) {
       return res.send({ error: error.toString() });
     }

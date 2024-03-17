@@ -1,11 +1,11 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const db = require("./models");
+const db = require("./client/models");
 const util = require("./utils");
-const Router = require("./routes");
+const Router = require("./client/routes");
 const client = require("./middleware/redis.conn");
-const { sequelize } = require("./models");
+const { sequelize } = require("./client/models");
 require("dotenv").config();
 
 app.use(express.json());

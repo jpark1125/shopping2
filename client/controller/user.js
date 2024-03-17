@@ -1,5 +1,5 @@
 const shortid = require("shortid");
-const util = require("../utils");
+const util = require("../../utils");
 const { U, A } = require("../prototype");
 const user = new U();
 const auth = new A();
@@ -37,12 +37,10 @@ module.exports = {
         user_type: userType,
       });
       await user.SignUp(user.UserBind(req.body, userType));
-      return res
-        .status(200)
-        .send({
-          access_token: req.body.access_token,
-          refresh_token: req.body.refresh_token,
-        });
+      return res.status(200).send({
+        access_token: req.body.access_token,
+        refresh_token: req.body.refresh_token,
+      });
     } catch (error) {
       return res.send({ error: error.toString() });
     }
