@@ -1,12 +1,17 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const db = require("./client/models");
+const db = require("./models");
 const util = require("./utils");
-const Router = require("./client/routes");
+const Router = require("./routes");
 const client = require("./middleware/redis.conn");
-const { sequelize } = require("./client/models");
+const { sequelize } = require("./models");
 require("dotenv").config();
+
+const http = require("http");
+const server = http.createServer(app);
+const Socket = require("./utils/socket");
+const io = Socket(server);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

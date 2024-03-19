@@ -8,6 +8,11 @@ const client = require("./middleware/redis.conn");
 const { sequelize } = require("./admin/models");
 require("dotenv").config();
 
+const http = require("http");
+const server = http.createServer(app);
+const Socket = require("./utils/socket");
+const io = Socket(server);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use("/api/v1", Router.userRouter);

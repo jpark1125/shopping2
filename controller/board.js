@@ -2,7 +2,7 @@ const { Board } = require("../models");
 const { Op } = require("sequelize");
 const { Users } = require("../models");
 const { B, A } = require("../prototype");
-const jwt = require("../../utils/jwt");
+const jwt = require("../utils/jwt");
 const { sequelize, QueryTypes } = require("../models");
 
 const board = new B();
@@ -20,8 +20,8 @@ module.exports = {
 
   GetPost: async (req, res) => {
     try {
-      const postId = req.params.id; // URL에서 게시글 ID 추출
-      const post = await board.getPostById(postId);
+      const id = req.params.id; // URL에서 게시글 ID 추출
+      const post = await board.getPostById(id);
 
       return res.status(200).json({ post });
     } catch (err) {

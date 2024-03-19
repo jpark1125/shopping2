@@ -1,5 +1,5 @@
 const shortid = require("shortid");
-const util = require("../../utils");
+const util = require("../utils");
 const { U, A } = require("../prototype");
 const user = new U();
 const auth = new A();

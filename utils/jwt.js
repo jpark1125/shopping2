@@ -19,7 +19,7 @@ module.exports = {
       ACCESS_TOKEN_KEY,
       {
         algorithm: "HS256",
-        expiresIn: "10m",
+        expiresIn: "30m",
       }
     );
     return token;

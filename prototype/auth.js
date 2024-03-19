@@ -1,4 +1,4 @@
-const util = require("../../utils");
+const util = require("../utils");
 const db = require("../models");
 
 class A {}
