@@ -22,7 +22,7 @@ U.prototype.DuplicateData = async (target, data) => {
     const whereClause = {};
     whereClause[target] = data;
 
-    const cnt = await db.adminuser.count({
+    const cnt = await db.user.count({
       where: whereClause,
     });
 
@@ -34,7 +34,7 @@ U.prototype.DuplicateData = async (target, data) => {
 
 U.prototype.SignUp = async (data) => {
   try {
-    await db.adminuser.create(data);
+    await db.user.create(data);
     await client.client.set(data.id, data.refresh_token);
   } catch (err) {
     throw err;
@@ -43,7 +43,7 @@ U.prototype.SignUp = async (data) => {
 U.prototype.LogIn = async (u) => {
   console.log(u.userid);
   try {
-    const user = await db.adminuser.findOne({
+    const user = await db.user.findOne({
       where: {
         userid: u.userid,
       },
@@ -54,7 +54,7 @@ U.prototype.LogIn = async (u) => {
         user_id: u.userid,
       });
       let refresh_token = util.jwt.createRefreshToken(user.id);
-      await db.adminuser.update(
+      await db.user.update(
         {
           refresh_token: refresh_token,
         },
@@ -76,7 +76,7 @@ U.prototype.LogIn = async (u) => {
 };
 U.prototype.MyPage = async (id) => {
   try {
-    const row = await db.adminuser.findOne({
+    const row = await db.user.findOne({
       where: {
         id: id,
       },
@@ -90,7 +90,7 @@ U.prototype.MyPage = async (id) => {
 U.prototype.UpdateMyPage = async (data) => {
   try {
     console.log(data);
-    await db.adminuser.update(
+    await db.user.update(
       {
         nickname: data.nickname,
       },

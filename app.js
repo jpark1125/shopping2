@@ -16,7 +16,7 @@ const io = Socket(server);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use("/api/v1", Router.userRouter);
-app.use("/api/v1/b", Router.BoardRoute);
+app.use("/api/v1", Router.BoardRoute);
 
 // sequelize
 //   .sync({ force: false })
