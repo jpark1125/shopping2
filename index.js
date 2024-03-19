@@ -1,6 +1,6 @@
 const { server_boot } = require("./app");
 
-const { admin_boot } = require("./admin");
+const { admin_boot } = require("./admin/admin");
 server_boot();
 admin_boot();
 
