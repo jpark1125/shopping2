@@ -9,23 +9,29 @@ const { sequelize } = require("./models");
 require("dotenv").config();
 
 //socket 관련부분
-const { createServer } = require("node:http");
-const { join } = require("node:path");
+
+const { createServer } = require("http");
+const { join } = require("path");
 const { Server } = require("socket.io");
 const server = createServer(app);
-const io = new Server(server);
-
-io.on("connection", (socket) => {
-  console.log("새로운 클라이언트가 연결되었습니다.");
-
-  socket.on("chat message", (message) => {
-    console.log("받은 메시지:", message);
-  });
-
-  socket.on("disconnect", () => {
-    console.log("클라이언트가 연결을 끊었습니다.");
-  });
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+  },
 });
+
+// io.on("connection", (socket) => {
+//   console.log("admin이 연결되었습니다.");
+
+//   socket.on("chat message", (message) => {
+//     console.log("받은 메시지:", message);
+//   });
+
+//   socket.on("disconnect", () => {
+//     console.log("admin이 연결을 끊었습니다.");
+//   });
+// });
 
 app.get("/", (req, res) => {
   res.sendFile(join(__dirname, "index.html"));
@@ -41,14 +47,14 @@ app.get("/", (req, res) => {
   res.send("<h1>Hello world3001</h1>");
 });
 
-sequelize
-  .sync({ force: false })
-  .then(() => {
-    console.log("데이터베이스 연결");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+// sequelize
+//   .sync({ force: false })
+//   .then(() => {
+//     console.log("데이터베이스 연결");
+//   })
+//   .catch((err) => {
+//     console.log(err);
+//   });
 
 const check_mysql_health = async () => {
   setInterval(async () => {
@@ -65,7 +71,7 @@ const admin_boot = async () => {
   try {
     util.jwt.Init(process.env.ACCESS_KEY, process.env.REFRESH_KEY);
     await db.sequelize.authenticate();
-    server.listen(3001, "0.0.0.0");
+    app.listen(3001, "0.0.0.0");
   } catch (error) {
     console.log("boot-error", error);
     process.exit(0);

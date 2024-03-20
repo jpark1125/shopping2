@@ -9,33 +9,39 @@ const { sequelize } = require("./models");
 require("dotenv").config();
 
 //socket 관련부분
-const { createServer } = require("node:http");
-const { join } = require("node:path");
+
+const { createServer } = require("http");
+const { join } = require("path");
 const { Server } = require("socket.io");
 const server = createServer(app);
-const io = new Server(server);
 
-io.on("connection", (socket) => {
-  console.log("새로운 클라이언트가 연결되었습니다.");
-
-  socket.on("chat message", (message) => {
-    console.log("받은 메시지:", message);
-  });
-
-  socket.on("disconnect", () => {
-    console.log("클라이언트가 연결을 끊었습니다.");
-  });
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+  },
 });
 
+// io.on("connection", (socket) => {
+//   console.log("client가 연결되었습니다.");
+
+//   socket.on("chat message", (message) => {
+//     console.log("admin:", message);
+//   });
+
+//   socket.on("disconnect", () => {
+//     console.log("client가 연결을 끊었습니다.");
+//   });
+// });
+
+app.get("/", (req, res) => {
+  res.sendFile(join(__dirname, "index.html"));
+});
 //여기까지 socket
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use("/api/v1", Router.userRouter);
 app.use("/api/v1", Router.BoardRoute);
-
-app.get("/", (req, res) => {
-  res.sendFile(join(__dirname, "index.html"));
-});
 
 // sequelize
 //   .sync({ force: false })
@@ -61,7 +67,7 @@ const server_boot = async () => {
   try {
     util.jwt.Init(process.env.ACCESS_KEY, process.env.REFRESH_KEY);
     await db.sequelize.authenticate();
-    server.listen(3000, "0.0.0.0");
+    app.listen(3000, "0.0.0.0");
   } catch (error) {
     console.log("boot-error", error);
     process.exit(0);
