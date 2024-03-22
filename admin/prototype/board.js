@@ -19,7 +19,7 @@ B.prototype.deletePost = async (id) => {
 // };
 B.prototype.getAllPosts = async () => {
   const posts = await Board.findAll({
-    attributes: ["id", "title", "image"],
+    attributes: ["id", "userId", "title", "image"],
   });
 
   const modifiedPosts = posts.map((post) => {
@@ -30,6 +30,7 @@ B.prototype.getAllPosts = async () => {
 
     return {
       id: post.id,
+      userId: userId,
       title: post.title,
       image: firstImage,
     };
