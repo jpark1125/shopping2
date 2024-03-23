@@ -44,11 +44,11 @@ module.exports = {
   Inquiry: async (req, res) => {
     try {
       const { xauth } = req.headers;
-      console.log("xaut : ", xauth);
+      //console.log("xaut : ", xauth);
       const decoded = jwt.verifyToken(xauth);
       const clientId = decoded.id; // 요청을 누른 클라이언트 아이디 가져오게
-      console.log("xauth token:", xauth);
-      console.log("decoded token:", decoded);
+      //console.log("xauth token:", xauth);
+      //console.log("decoded token:", decoded);
       const postId = req.params.id; //게시글 id
 
       const post = await Board.findByPk(postId, {

@@ -21,17 +21,24 @@ const io = new Server(server, {
 app.use(cors());
 app.use(express.json());
 
-app.post("/api/create-chat-room", (req, res) => {
+app.post("/api/create-chat-room", async (req, res) => {
   const { clientId, adminId } = req.body;
   const roomId = clientId + "_" + adminId; // 채팅방 id
 
   // 채팅방 생성 확인 콘솔
-  console.log(
-    `[HTTP] Request to create room: ${roomId}, Client: ${clientId}, Admin: ${adminId}`
-  );
+  console.log(`create room: ${roomId}, Client: ${clientId}, Admin: ${adminId}`);
 
-  //레디스 붙여서 채팅방 디비 만들고 룸 만들기
+  //레디스 붙여서 채팅방 디비 만들고 룸 만들기\
+  await client.sadd("chatRooms", roomId);
 
+  //채팅방 데이터
+  await client.hset(`chatRoom:${roomId}`, {
+    createdAt: new Date().toISOString(),
+    isActive: "true",
+    title: "채팅방 제목",
+  });
+
+  //여기까지
   res.json({ message: "Chat room created successfully", roomId });
 });
 
@@ -45,8 +52,16 @@ io.on("connection", (socket) => {
   });
 
   // 메시지 전송
-  socket.on("chat msg", ({ roomId, msg }) => {
-    io.to(roomId).emit("chat msg", { roomId, msg });
+  socket.on("chat msg", async ({ roomId, userId, msg }) => {
+    const messageData = JSON.stringify({
+      userId,
+      msg,
+      timestamp: new Date().toISOString(),
+    });
+
+    await client.rpush(`chatRoom:${roomId}:messages`, messageData);
+
+    io.to(roomId).emit("chat msg", { userId, msg });
   });
 
   // 연결 해제
