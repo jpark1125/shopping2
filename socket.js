@@ -4,11 +4,10 @@ const cors = require("cors");
 const Router = require("./routes");
 const client = require("./middleware/redis.conn");
 require("dotenv").config();
+const path = require("path");
 
 const { createServer } = require("http");
-const { join } = require("path");
 const { Server } = require("socket.io");
-const { emit } = require("process");
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
@@ -18,60 +17,85 @@ const io = new Server(server, {
   },
 });
 
+app.get("/index", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
+});
+
 app.use(cors());
 app.use(express.json());
 
-app.post("/api/create-chat-room", async (req, res) => {
-  const { clientId, adminId } = req.body;
-  const roomId = clientId + "_" + adminId; // 채팅방 id
+app.post("/api/chatroom", async (req, res) => {
+  try {
+    const { clientId, adminId } = req.body;
+    const roomId = clientId + "_" + adminId;
 
-  // 채팅방 생성 확인 콘솔
-  console.log(`create room: ${roomId}, Client: ${clientId}, Admin: ${adminId}`);
+    console.log(
+      `create room: ${roomId}, Client: ${clientId}, Admin: ${adminId}`
+    );
 
-  //레디스 붙여서 채팅방 디비 만들고 룸 만들기\
-  await client.sadd("chatRooms", roomId);
-
-  //채팅방 데이터
-  await client.hset(`chatRoom:${roomId}`, {
-    createdAt: new Date().toISOString(),
-    isActive: "true",
-    title: "채팅방 제목",
-  });
-
-  //여기까지
-  res.json({ message: "Chat room created successfully", roomId });
+    await client.sadd("chatRooms", roomId);
+    await client.hset(`chatRoom:${roomId}`, {
+      createdAt: new Date().toISOString(),
+      participants: JSON.stringify([clientId, adminId]),
+    });
+    res.json({ message: "Chat room created successfully", roomId });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
-// 소켓쪽
 io.on("connection", (socket) => {
   console.log("새로운 클라이언트가 연결되었습니다.");
 
-  socket.on("join_room", ({ roomId }) => {
-    socket.join(roomId);
-    console.log(`[WebSocket] Socket joined room: ${roomId}`);
+  socket.on("join_room", async ({ roomId, userId }) => {
+    try {
+      const roomData = await client.hgetall(`chatRoom:${roomId}`);
+      if (roomData) {
+        console.log("room:", roomData);
+        const participants = JSON.parse(roomData.participants);
+        if (participants.includes(userId)) {
+          socket.join(roomId);
+          console.log(`[WebSocket] Socket joined room: ${roomId}`);
+        } else {
+          console.log(
+            `[WebSocket] denied for user: ${userId} to room: ${roomId}`
+          );
+        }
+      }
+    } catch (err) {
+      console.error(err);
+    }
   });
 
-  // 메시지 전송
   socket.on("chat msg", async ({ roomId, userId, msg }) => {
-    const messageData = JSON.stringify({
-      userId,
-      msg,
-      timestamp: new Date().toISOString(),
-    });
+    try {
+      const roomData = await client.hgetall(`chatRoom:${roomId}`);
+      if (roomData) {
+        const participants = JSON.parse(roomData.participants);
+        if (participants.includes(userId)) {
+          const messageData = JSON.stringify({
+            userId,
+            msg,
+            timestamp: new Date().toISOString(),
+          });
 
-    await client.rpush(`chatRoom:${roomId}:messages`, messageData);
-
-    io.to(roomId).emit("chat msg", { userId, msg });
+          await client.rpush(`chatRoom:${roomId}:messages`, messageData);
+          io.to(roomId).emit("chat msg", { userId, msg });
+        }
+      }
+    } catch (err) {
+      console.error(err);
+    }
   });
 
-  // 연결 해제
   socket.on("disconnect", () => {
     console.log("클라이언트가 연결을 끊었습니다.");
   });
 });
 
 app.get("/", (req, res) => {
-  res.sendFile(join(__dirname, "index.html"));
+  res.sendFile(path.join(__dirname, "index.html"));
 });
 
 const socket_boot = async () => {

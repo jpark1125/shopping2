@@ -59,7 +59,7 @@ module.exports = {
       }
       const adminId = post.userId;
 
-      await axios.post("http://127.0.0.1:3002/api/create-chat-room", {
+      await axios.post("http://127.0.0.1:3002/api/chatroom", {
         clientId,
         adminId,
       });
