@@ -42,6 +42,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use("/api/v1", Router.userRouter);
 app.use("/api/v1", Router.BoardRoute);
+app.use("/api/v2", Router.CartRoute);
 
 // sequelize
 //   .sync({ force: false })
