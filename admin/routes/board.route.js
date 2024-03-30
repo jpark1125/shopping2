@@ -11,9 +11,7 @@ router.delete("/delete/:id", board_controller.Delete);
 router.post("/update", board_controller.Update);
 router.get("/get", board_controller.Get); //목록조회
 router.get("/getpost/:id", board_controller.GetPost); // 상세보기
-//router.post("/updatecontent", board_controllerr.Updatcontent);
-//router.post("/updatetitle", board_controller.Updatetitle);
-//router.post("/deleteimage", board_controller.Deleteimage);
 router.post("/search", board_controller.Search);
 
+router.get("/chatrooms", board_controller.ChatRooms); // 마이페이지 만들어서 보드에서 빼야댐
 module.exports = router;

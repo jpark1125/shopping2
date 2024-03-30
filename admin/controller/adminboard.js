@@ -5,6 +5,7 @@ const { B, A } = require("../prototype");
 const jwt = require("../../utils/jwt");
 const shortid = require("shortid");
 const { sequelize, QueryTypes } = require("../models");
+const { client } = require("../../middleware");
 
 const board = new B();
 
@@ -104,6 +105,41 @@ module.exports = {
       if (result[0] > 0)
         return res.status(200).json({ message: "Post updated successfully" });
       else res.status(404).json({ error: "Post not found" });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
+
+  ChatRooms: async (req, res) => {
+    try {
+      const { xauth } = req.headers;
+      const decoded = jwt.verifyToken(xauth);
+      const adminId = decoded.id;
+
+      let cursor = "0";
+      let Adminchatroom = [];
+
+      do {
+        const reply = await client.scan(
+          cursor,
+          "MATCH",
+          `chatRoom:*${adminId}*`,
+          "COUNT",
+          100
+        );
+        cursor = reply[0];
+        Adminchatroom.push(...reply[1]);
+      } while (cursor !== "0");
+
+      const chatRoomsDetail = await Promise.all(
+        Adminchatroom.map(async (chatRoomKey) => {
+          const chatRoomData = await client.hgetall(chatRoomKey);
+          return { key: chatRoomKey, data: chatRoomData };
+        })
+      );
+
+      res.status(200).json({ chatRooms: chatRoomsDetail });
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: "Internal Server Error" });
