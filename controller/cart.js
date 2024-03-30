@@ -4,7 +4,6 @@ const { Users } = require("../models");
 const { B, A, C } = require("../prototype");
 const jwt = require("../utils/jwt");
 const { sequelize, QueryTypes } = require("../models");
-const client = require("../middleware/redis.conn");
 const cart = new C();
 
 module.exports = {
@@ -31,7 +30,6 @@ module.exports = {
   },
 
   GetCart: async (req, res) => {
-    // 지금은 게시글 상세를 불러옴, 이거 목록으로 변경하기
     try {
       const { xauth } = req.headers;
       const decoded = jwt.verifyToken(xauth);
@@ -45,12 +43,27 @@ module.exports = {
           .json({ message: "Your cart is empty", cartItems: [] });
       }
 
+      // postId가 문자열 배열이러소 where조건에 맞게 쿼리 수정필요하긴함
       const cartItems = await Board.findAll({
+        attributes: ["id", "userId", "title", "image"],
         where: {
           id: postIds,
         },
       });
-      res.status(200).json(cartItems);
+
+      const modifiedCartItems = cartItems.map((item) => {
+        const images = item.image ? item.image.split(",") : [];
+        const firstImage = images.length > 0 ? images[0] : null;
+
+        return {
+          id: item.id,
+          userId: item.userId,
+          title: item.title,
+          image: firstImage, // 첫 번째 이미지만 포함
+        };
+      });
+
+      res.status(200).json(modifiedCartItems);
     } catch (error) {
       console.error(error);
       if (error.name === "JsonWebTokenError") {

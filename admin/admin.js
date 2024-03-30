@@ -21,22 +21,9 @@ const io = new Server(server, {
   },
 });
 
-// io.on("connection", (socket) => {
-//   console.log("admin이 연결되었습니다.");
-
-//   socket.on("chat message", (message) => {
-//     console.log("받은 메시지:", message);
-//   });
-
-//   socket.on("disconnect", () => {
-//     console.log("admin이 연결을 끊었습니다.");
-//   });
+// app.get("/", (req, res) => {
+//   res.sendFile(join(__dirname, "index.html"));
 // });
-
-app.get("/", (req, res) => {
-  res.sendFile(join(__dirname, "index.html"));
-});
-//여기까지 socket
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -46,15 +33,6 @@ app.use("/api/v1", Router.BoardRoute);
 app.get("/", (req, res) => {
   res.send("<h1>Hello world3001</h1>");
 });
-
-// sequelize
-//   .sync({ force: false })
-//   .then(() => {
-//     console.log("데이터베이스 연결");
-//   })
-//   .catch((err) => {
-//     console.log(err);
-//   });
 
 const check_mysql_health = async () => {
   setInterval(async () => {
