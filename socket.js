@@ -10,6 +10,7 @@ const { createServer } = require("http");
 const { Server } = require("socket.io");
 const server = createServer(app);
 const io = new Server(server, {
+  //connectionStateRecovery: {},
   cors: {
     origin: ["http://localhost:3000", "http://localhost:3001"],
     methods: ["GET", "POST"],
@@ -56,6 +57,19 @@ io.on("connection", (socket) => {
         const participants = JSON.parse(roomData.participants);
         if (participants.includes(userId)) {
           socket.join(roomId);
+
+          //이전메세지, 테스트
+          const messages = await client.lrange(
+            `chatRoom:${roomId}:messages`,
+            0,
+            -1
+          );
+
+          messages.forEach((message) => {
+            const messageData = JSON.parse(message);
+            socket.emit("chat msg", messageData);
+          });
+          ////////////////////////////////////////////////
           console.log(`[WebSocket] Socket joined room: ${roomId}`);
         } else {
           console.log(

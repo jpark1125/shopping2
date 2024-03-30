@@ -85,6 +85,15 @@
           input.value = "";
         }
       });
+      //연결되지 않았을때의 메세지 가져오기
+      socket.on("joined_room", (previousMessages) => {
+        previousMessages.forEach((message) => {
+          const item = document.createElement("li");
+          item.textContent = `${message.userId}: ${message.msg}`;
+          messages.appendChild(item);
+        });
+        window.scrollTo(0, document.body.scrollHeight);
+      });
 
       socket.on("chat msg", (data) => {
         const item = document.createElement("li");
