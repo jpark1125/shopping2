@@ -48,7 +48,7 @@ module.exports = {
       const decoded = jwt.verifyToken(xauth);
       const clientId = decoded.id;
 
-      const postId = req.params.id;
+      const postId = req.body.id;
 
       const post = await Board.findByPk(postId, {
         attributes: ["userId"],

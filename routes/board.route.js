@@ -9,6 +9,6 @@ const router = express.Router();
 router.get("/getpost/:id", board_controller.GetPost);
 router.get("/get", board_controller.Get);
 router.post("/search", board_controller.Search);
-router.post("/getpost/:id/inquire", board_controller.Inquiry);
+router.post("/getpost/inquiry", board_controller.Inquiry);
 
 module.exports = router;
