@@ -63,6 +63,8 @@
       <input id="input" autocomplete="off" /><button>Send</button>
       <button id="toggle-btn">Disconnect</button>
     </form>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
     <script src="http://localhost:3002/socket.io/socket.io.js"></script>
 
     <script>
@@ -74,6 +76,52 @@
       const input = document.getElementById("input");
       const messages = document.getElementById("messages");
       const toggleButton = document.getElementById("toggle-btn");
+
+      /* //body값으로 유저 받기
+      const clientId = "0nf4xsaxP"; // 구매자 ID
+      const adminId = "5JFlVbG_O"; // 판매자 ID
+
+      // 채팅방 생성 및 참여 함수
+      function createAndJoinRoom(clientId, adminId) {
+        axios
+          .post("http://localhost:3002/api/chatroom", { clientId, adminId })
+          .then((response) => {
+            const { roomId } = response.data; // 서버로부터 받은 roomId
+
+            socket.emit("join_room", { roomId, userId: clientId });
+
+            socket.emit("join_room", { roomId, userId: adminId });
+
+            form.addEventListener("submit", (e) => {
+              e.preventDefault();
+              if (input.value) {
+                // 메시지 전송 시 roomId와 함께 전송
+                socket.emit("chat msg", { roomId, userId, msg: input.value });
+                input.value = "";
+              }
+            });
+            //연결되지 않았을때의 메세지 가져오기
+            socket.on("joined_room", (previousMessages) => {
+              previousMessages.forEach((message) => {
+                const item = document.createElement("li");
+                item.textContent = `${message.userId}: ${message.msg}`;
+                messages.appendChild(item);
+              });
+              window.scrollTo(0, document.body.scrollHeight);
+            });
+
+            socket.on("chat msg", (data) => {
+              const item = document.createElement("li");
+              item.textContent = `${data.userId}: ${data.msg}`;
+              messages.appendChild(item);
+              window.scrollTo(0, document.body.scrollHeight);
+            });
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+
+      // 채팅방 생성 및 참여 시작
+      createAndJoinRoom(clientId, adminId); */
 
       socket.emit("join_room", { roomId, userId });
 
