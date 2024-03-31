@@ -9,13 +9,18 @@ B.prototype.getAllPosts = async () => {
   });
 
   const modifiedPosts = posts.map((post) => {
-    const images = post.image ? post.image.split(",") : [];
+    let firstImage = null;
 
-    const firstImage = images.length > 0 ? images[0] : null; //3항연산자 if문으로 변경하기
+    if (post.image) {
+      const images = post.image.split(",");
+      if (images.length > 0) {
+        firstImage = images[0];
+      }
+    }
 
     return {
       id: post.id,
-      userId: userId,
+      userId: post.userId,
       title: post.title,
       image: firstImage,
     };

@@ -8,8 +8,6 @@ const client = require("../middleware/redis.conn");
 const { sequelize } = require("./models");
 require("dotenv").config();
 
-//socket 관련부분
-
 const { createServer } = require("http");
 const { join } = require("path");
 const { Server } = require("socket.io");
@@ -20,10 +18,6 @@ const io = new Server(server, {
     methods: ["GET", "POST"],
   },
 });
-
-// app.get("/", (req, res) => {
-//   res.sendFile(join(__dirname, "index.html"));
-// });
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

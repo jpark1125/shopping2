@@ -58,7 +58,7 @@ io.on("connection", (socket) => {
         if (participants.includes(userId)) {
           socket.join(roomId);
 
-          //이전메세지, 테스트
+          //이전메세지, 테스트///////////////////////////////////////
           const messages = await client.lrange(
             `chatRoom:${roomId}:messages`,
             0,
@@ -69,7 +69,7 @@ io.on("connection", (socket) => {
             const messageData = JSON.parse(message);
             socket.emit("chat msg", messageData);
           });
-          ////////////////////////////////////////////////
+          /////////////////////////////////////////////////////////
           console.log(`[WebSocket] Socket joined room: ${roomId}`);
         } else {
           console.log(

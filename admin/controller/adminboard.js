@@ -1,6 +1,6 @@
 const { Board } = require("../models");
-const { Op } = require("sequelize");
-const { Users } = require("../models");
+//const { Op } = require("sequelize");
+//const { Users } = require("../models");
 const { B, A } = require("../prototype");
 const jwt = require("../../utils/jwt");
 const shortid = require("shortid");
@@ -12,21 +12,23 @@ const board = new B();
 module.exports = {
   Post: async (req, res) => {
     try {
-      console.log("cont2");
-
       const { title, content } = req.body;
       const { xauth } = req.headers;
       const decoded = jwt.verifyToken(xauth);
-      console.log("cont1");
       let id = shortid.generate();
       let userid = decoded.id;
       console.log("userid :", userid);
-      const images = req.files.image.map((file) => "/img/" + file.filename);
+      console.log("req.files: ", req.files);
+      let images = [];
+      if (req.files && req.files.image) {
+        if (Array.isArray(req.files.image)) {
+          images = req.files.image.map((file) => "/img/" + file.filename);
+        }
+      }
       console.log("images : ", images);
 
       const result = await board.createPost(id, title, content, images, userid);
 
-      console.log("cont");
       return res.status(200).json({ result });
     } catch (err) {
       console.error(err);
@@ -44,7 +46,6 @@ module.exports = {
       const post = await Board.findOne({
         where: { id: postId, userId: decoded.id },
       });
-      console.log("delete 1");
       if (!post) {
         return res
           .status(404)
@@ -74,7 +75,7 @@ module.exports = {
 
   GetPost: async (req, res) => {
     try {
-      const id = req.params.id; // URL에서 게시글 ID 추출
+      const id = req.params.id;
       const post = await board.getPostById(id);
 
       return res.status(200).json({ post });

@@ -14,23 +14,24 @@ B.prototype.deletePost = async (id) => {
   return await Board.destroy({ where: { id: id } });
 };
 
-// B.prototype.getAllPosts = async () {
-//   return await Board.findAll();
-// };
 B.prototype.getAllPosts = async () => {
   const posts = await Board.findAll({
     attributes: ["id", "userId", "title", "image"],
   });
 
   const modifiedPosts = posts.map((post) => {
-    // 이미지 경로를 쉼표로 분할하여 배열로 변환
-    const images = post.image ? post.image.split(",") : [];
-    // 첫 번째 이미지만 사용하도록 수정
-    const firstImage = images.length > 0 ? images[0] : null;
+    let firstImage = null;
+
+    if (post.image) {
+      const images = post.image.split(",");
+      if (images.length > 0) {
+        firstImage = images[0];
+      }
+    }
 
     return {
       id: post.id,
-      userId: userId,
+      userId: post.userId,
       title: post.title,
       image: firstImage,
     };

@@ -15,7 +15,7 @@ module.exports = {
       console.log("decoded", decoded);
       const userId = decoded.id;
       //const postId = req.body.id;
-      const postId = req.params.id; //테스트 파람스
+      const postId = req.params.id;
 
       await cart.addCartItem(userId, postId);
 
@@ -51,15 +51,20 @@ module.exports = {
         },
       });
 
-      const modifiedCartItems = cartItems.map((item) => {
-        const images = item.image ? item.image.split(",") : [];
-        const firstImage = images.length > 0 ? images[0] : null;
+      const modifiedCartItems = cartItems.map((post) => {
+        let firstImage = null;
 
+        if (post.image) {
+          const images = post.image.split(",");
+          if (images.length > 0) {
+            firstImage = images[0];
+          }
+        }
         return {
-          id: item.id,
-          userId: item.userId,
-          title: item.title,
-          image: firstImage, // 첫 번째 이미지만 포함
+          id: post.id,
+          userId: post.userId,
+          title: post.title,
+          image: firstImage,
         };
       });
 

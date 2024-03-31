@@ -1,6 +1,6 @@
 const { Board } = require("../models");
-const { Op } = require("sequelize");
-const { Users } = require("../models");
+//const { Op } = require("sequelize");
+//const { Users } = require("../models");
 const { B, A } = require("../prototype");
 const jwt = require("../utils/jwt");
 const { sequelize, QueryTypes } = require("../models");
@@ -20,7 +20,7 @@ module.exports = {
 
   GetPost: async (req, res) => {
     try {
-      const id = req.params.id; // URL에서 게시글 ID 추출
+      const id = req.params.id;
       const post = await board.getPostById(id);
 
       return res.status(200).json({ post });
@@ -44,15 +44,14 @@ module.exports = {
   Inquiry: async (req, res) => {
     try {
       const { xauth } = req.headers;
-      //console.log("xaut : ", xauth);
+
       const decoded = jwt.verifyToken(xauth);
-      const clientId = decoded.id; // 요청을 누른 클라이언트 아이디 가져오게
-      //console.log("xauth token:", xauth);
-      //console.log("decoded token:", decoded);
-      const postId = req.params.id; //게시글 id
+      const clientId = decoded.id;
+
+      const postId = req.params.id;
 
       const post = await Board.findByPk(postId, {
-        attributes: ["userId"], // 게시글 작성한 유저 고유id
+        attributes: ["userId"],
       });
       if (!post) {
         return res.status(404).json({ error: "Post not found" });

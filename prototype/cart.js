@@ -1,5 +1,5 @@
-const { Board } = require("../models");
-const { Op } = require("sequelize");
+//const { Board } = require("../models");
+//const { Op } = require("sequelize");
 const client = require("../middleware/redis.conn");
 
 class C {}
