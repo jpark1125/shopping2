@@ -41,7 +41,7 @@ module.exports = {
       const { xauth } = req.headers;
       const decoded = jwt.verifyToken(xauth);
 
-      const postId = req.params.id;
+      const postId = req.body.id;
 
       const post = await Board.findOne({
         where: { id: postId, userId: decoded.id },

@@ -14,8 +14,8 @@ module.exports = {
       const decoded = jwt.verifyToken(xauth);
       console.log("decoded", decoded);
       const userId = decoded.id;
-      //const postId = req.body.id;
-      const postId = req.params.id;
+      const postId = req.body.id;
+      //const postId = req.params.id;
 
       await cart.addCartItem(userId, postId);
 
@@ -84,7 +84,8 @@ module.exports = {
       const decoded = jwt.verifyToken(xauth);
       const userId = decoded.id;
 
-      const postId = req.params.id;
+      //const postId = req.params.id;
+      const postId = req.body.id;
 
       const result = await cart.removeCartItem(userId, postId);
 

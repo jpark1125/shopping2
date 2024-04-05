@@ -37,6 +37,21 @@ const check_mysql_health = async () => {
   }, 60000 * 3);
 };
 
+const check_redis_health = async () => {
+  setInterval(async () => {
+    try {
+      const res = await client.ping();
+      if (res !== "PONG") {
+        throw new Error("Redis ping did not return PONG");
+      }
+      console.log("Redis is connected successfully.");
+    } catch (error) {
+      console.error("Redis connection error: ", error);
+      process.exit(1); // Redis 연결 실패 시 프로세스 종료
+    }
+  }, 60000 * 3);
+};
+
 const server_boot = async () => {
   try {
     util.jwt.Init(process.env.ACCESS_KEY, process.env.REFRESH_KEY);
@@ -47,6 +62,7 @@ const server_boot = async () => {
     process.exit(0);
   } finally {
     check_mysql_health(); //mysql 연결 체크
+    check_redis_health();
   }
 };
 module.exports = { server_boot };
