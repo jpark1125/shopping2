@@ -22,7 +22,7 @@ module.exports = {
       let images = [];
       if (req.files && req.files.image) {
         if (Array.isArray(req.files.image)) {
-          images = req.files.image.map((file) => "/img/" + file.filename);
+          images = req.files.image.map((file) => "/img/" + file.location);
         }
       }
       console.log("images : ", images);
