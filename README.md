@@ -28,8 +28,7 @@
 - **데이터베이스**: MySQL (MySQL2), Redis
 - **인증**: bcryptjs, jsonwebtoken
 - **파일 업로드**: multer, multer-s3
-- **HTTP 클라이언트**: axios
-- **기타 도구**: AWS SDK, dotenv, nodemon, shortid
+- **기타 도구**: AWS SDK, dotenv, nodemon, shortid, AWS CloudFront, axios
   
 <hr>
 
