@@ -27,7 +27,7 @@
 - **백엔드**: Node.js, Express, Socket.io
 - **데이터베이스**: MySQL (MySQL2), Redis
 - **인증**: bcryptjs, jsonwebtoken
-- **파일 업로드**: multer, multer-s3
+- **파일 업로드**: multer-s3
 - **기타 도구**: Docker, AWS SDK, dotenv, shortid, AWS CloudFront, axios
   
 <hr>
